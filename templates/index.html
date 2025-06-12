@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#faffca] text-gray-800 font-sans">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Blockchain Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+  <h1 class="text-3xl font-bold text-[#5a827e] mb-4">🧠 Smart Blockchain Query Dashboard</h1>
+  
+  <form method="POST" action="/query" class="w-full max-w-xl flex gap-2 mb-6">
+    <input type="text" name="query" placeholder="e.g., top 10 wallets holding USDT" class="flex-1 border p-3 rounded-xl shadow" required />
+    <button type="submit" class="bg-[#84ae92] text-white px-5 py-3 rounded-xl hover:bg-[#5a827e]">Submit</button>
+  </form>
+
+  {% if error %}
+    <p class="text-red-600 font-semibold">{{ error }}</p>
+  {% endif %}
+
+  {% if results %}
+    <div class="w-full max-w-6xl overflow-x-auto">
+      <table class="w-full table-auto border border-gray-300 shadow">
+        <thead class="bg-[#b9d4aa] text-left">
+          <tr>
+            <th class="p-3">#</th>
+            <th class="p-3">Address</th>
+            <th class="p-3">Balance (ETH)</th>
+            <th class="p-3">Token Balance</th>
+            <th class="p-3">Tx Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for wallet in results %}
+            <tr class="border-t hover:bg-[#f0f9f5]">
+              <td class="p-3">{{ loop.index }}</td>
+              <td class="p-3">{{ wallet.address }}</td>
+              <td class="p-3">{{ '%.4f' % (wallet.balance or 0.0) }}</td>
+              <td class="p-3">{{ '%.4f' % (wallet.token_balance or 0.0) }}</td>
+              <td class="p-3">{{ wallet.transaction_count or 'N/A' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</body>
+</html>
